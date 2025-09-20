@@ -11,7 +11,7 @@ namespace MVC_Practice_Project.DAL.Data.Contexts
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext() : base()
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
         }
@@ -22,10 +22,10 @@ namespace MVC_Practice_Project.DAL.Data.Contexts
 
             base.OnModelCreating(modelBuilder);
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server = .; Database = MVC_PP_DB; Trusted_Connection = True; TrustServerCertificate = True");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server = .; Database = MVC_PP_DB; Trusted_Connection = True; TrustServerCertificate = True");
+        //}
 
         public DbSet<Department> Departments { get; set; }
     }

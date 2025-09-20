@@ -13,9 +13,10 @@ namespace MVC_Practice_Project.BLL.Repositories
     {
         private readonly AppDbContext _context;
 
-        public DepartmentRepository()
+        // ASK CLR Create Object From AppDbContext
+        public DepartmentRepository(AppDbContext context)
         {
-            _context = new AppDbContext();
+            _context = context;
         }
 
         public IEnumerable<Department> GetAll()
