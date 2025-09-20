@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MVC_Practice_Project.BLL.Interfaces;
 using MVC_Practice_Project.BLL.Repositories;
 using MVC_Practice_Project.DAL.Data.Contexts;
 
@@ -16,11 +17,12 @@ namespace MVC_Practice_Project.PL
             //builder.Services.AddTransient();
             //builder.Services.AddSingleton();
 
-            builder.Services.AddScoped<DepartmentRepository>(); // Allow DI For DepartmentRepository
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow DI For DepartmentRepository
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer("Server = .; Database = MVC_PP_DB; Trusted_Connection = True; TrustServerCertificate = True");
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                //options.UseSqlServer(builder.Configuration["DefaultConnection"]);
             }); // Allow DI For AppDbContext
 
             var app = builder.Build();
