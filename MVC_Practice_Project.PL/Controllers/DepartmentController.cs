@@ -18,7 +18,7 @@ namespace MVC_Practice_Project.PL.Controllers
         {
             var departments = _departmentRepository.GetAll();
 
-            return View();
+            return View(departments);
         }
     }
 }
