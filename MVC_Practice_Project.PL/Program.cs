@@ -1,3 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using MVC_Practice_Project.BLL.Interfaces;
+using MVC_Practice_Project.BLL.Repositories;
+using MVC_Practice_Project.DAL.Data.Contexts;
+
 namespace MVC_Practice_Project.PL
 {
     public class Program
@@ -8,6 +13,17 @@ namespace MVC_Practice_Project.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews(); // Register Built-in MVC Services
+
+            //builder.Services.AddTransient();
+            //builder.Services.AddSingleton();
+
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow DI For DepartmentRepository
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                //options.UseSqlServer(builder.Configuration["DefaultConnection"]);
+            }); // Allow DI For AppDbContext
 
             var app = builder.Build();
 
