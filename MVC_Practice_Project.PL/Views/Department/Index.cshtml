@@ -27,20 +27,49 @@
             </tr>
         </thead>
         <tbody>
+            <!-- Button trigger modal -->
+            @* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Launch demo modal
+            </button> *@
+
             @foreach(var department in Model)
             {
                 <tr>
                     <td>@department.Code</td>
                     <td>@department.Name</td>
                     <td>@department.CreateAt</td>
-                    <td><a class="btn btn-success" asp-action="Details">Details</a></td>
-                    <td><a class="btn btn-warning" asp-action="Edit">Update</a></td>
-                    <td><a class="btn btn-danger" asp-action="Delete">Delete</a></td>
+                    <td><a class="btn btn-success" asp-route-id="@department.Id" asp-action="Details">Details</a></td>
+                    <td><a class="btn btn-warning" asp-route-id="@department.Id" asp-action="Edit">Update</a></td>
+                    <td><a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal-@department.Id">Delete</a></td>
+
                 </tr>
+                    <!-- Modal -->
+                <div class="modal fade" id="exampleModal-@department.Id" tabindex="-1" aria-labelledby="exampleModalLabel-@department.Id" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content " width=106%;>
+                                <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel-@department.Id">Modal title</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are You Sure You Want To Delete "@department.Name" Department From the Database?
+                                    <br />
+                                    You Can't Retreve This Data
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <form>
+                                        <button type="submit" asp-route-id="@department.Id" asp-action="Delete" class="delete btn btn-danger">Delete Department</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             }
         </tbody>
     </table>
 }
+
 else
 {
     <div class="mt-4 alert alert-primary">
