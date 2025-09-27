@@ -29,5 +29,6 @@ namespace MVC_Practice_Project.DAL.Data.Contexts
         //}
 
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 }
