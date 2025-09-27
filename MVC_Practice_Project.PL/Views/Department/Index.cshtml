@@ -40,19 +40,19 @@
                     <td>@department.CreateAt</td>
                     <td><a class="btn btn-success" asp-route-id="@department.Id" asp-action="Details">Details</a></td>
                     <td><a class="btn btn-warning" asp-route-id="@department.Id" asp-action="Edit">Update</a></td>
-                    <td><a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal-@department.Id">Delete</a></td>
+                    <td><a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#department@(department.Id*3/100)">Delete</a></td>
 
                 </tr>
                     <!-- Modal -->
-                <div class="modal fade" id="exampleModal-@department.Id" tabindex="-1" aria-labelledby="exampleModalLabel-@department.Id" aria-hidden="true">
+                <div class="modal fade" id="department@(department.Id * 3 / 100)" tabindex="-1" aria-labelledby="departmentLabel@(department.Id * 3 / 100)" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content " width=106%;>
                                 <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel-@department.Id">Modal title</h1>
+                                <h1 class="modal-title fs-5" id="departmentLabel@(department.Id * 3 / 100)">Warning</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    Are You Sure You Want To Delete "@department.Name" Department From the Database?
+                                Are You Sure You Want To Delete <strong>@department.Name</strong> Department?
                                     <br />
                                     You Can't Retreve This Data
                                 </div>
