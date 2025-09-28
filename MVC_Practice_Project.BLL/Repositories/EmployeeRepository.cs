@@ -9,41 +9,12 @@ using System.Threading.Tasks;
 
 namespace MVC_Practice_Project.BLL.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    // ASK CLR Create Object From AppDbContext
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
-        private readonly AppDbContext _context;
-
-        public EmployeeRepository(AppDbContext context)
+        public EmployeeRepository(AppDbContext context) : base(context)
         {
-            _context = context;
-        }
 
-        public IEnumerable<Employee> GetAll()
-        {
-            return _context.Employees.ToList();
-        }
-
-        public Employee? Get(int id)
-        {
-            return _context.Employees.Find(id);
-        }
-
-        public int Add(Employee employee)
-        {
-            _context.Employees.Add(employee);
-            return _context.SaveChanges();
-        }
-
-        public int Update(Employee employee)
-        {
-            _context.Employees.Update(employee);
-            return _context.SaveChanges();
-        }
-
-        public int Delete(Employee employee)
-        {
-            _context.Employees.Remove(employee);
-            return _context.SaveChanges();
         }
     }
 }
