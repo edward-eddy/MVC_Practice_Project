@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 
 namespace MVC_Practice_Project.BLL.Interfaces
 {
-    public interface IDepartmentRepository : IGenericRepository<Department>
+    public interface IGenericRepository<T> where T : BaseEntity
     {
+        IEnumerable<T> GetAll();
+        T? Get(int id);
+        int Add(T model);
+        int Update(T model);
+        int Delete(T model);
     }
 }

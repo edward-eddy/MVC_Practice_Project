@@ -14,8 +14,8 @@ namespace MVC_Practice_Project.PL.Controllers
         public DepartmentController(IDepartmentRepository departmentRepository)
         {
             _departmentRepository = departmentRepository;
-
         }
+
         public IActionResult Index()
         {
             var departments = _departmentRepository.GetAll();
@@ -28,23 +28,22 @@ namespace MVC_Practice_Project.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Department department)
+        public IActionResult Create(CreateDepartmentDto model)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
-                //var department = new Department()
-                //{
-                //    Code = model.Code,
-                //    Name = model.Name,
-                //    CreateAt = model.CreateAt,
-                //};
+                var department = new Department()
+                {
+                    Code = model.Code,
+                    Name = model.Name,
+                };
                 var Count = _departmentRepository.Add(department);
                 if (Count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
-            return View(department);
+            return View(model);
         }
         [HttpGet]
         public IActionResult Details([FromRoute] int? id, string ViewName = "Details")
@@ -63,7 +62,7 @@ namespace MVC_Practice_Project.PL.Controllers
             return View(ViewName, department);
         }
         [HttpGet]
-        public IActionResult Edit([FromRoute] int? id)
+        public IActionResult Edit(int? id)
         {
             //if (id is null) return BadRequest("Invalid Id");
             //var department = _departmentRepository.Get(id.Value);

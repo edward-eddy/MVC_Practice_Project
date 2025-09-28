@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Employee>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>All Employees</h1>
+
+<br />
+<br />
+
+<a asp-action="Create" asp-controller="Employee" class="btn btn-primary">Add New Employee</a>
+
+<br />
+<br />
+
+@if (Model.Any())
+{
+    <table class="table table-hover table-striped table-light">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Salary</th>
+                <th>Is Active</th>
+                <th>Is Deleted</th>
+                <th>Hiring Date</th>
+                <th>Created At</th>
+                <th>Details</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach(var employee in Model)
+            {
+                <tr>
+                    <td>@employee.Name</td>
+                    <td>@employee.Age</td>
+                    <td>@employee.Email</td>
+                    <td>@employee.Address</td>
+                    <td>@employee.Phone</td>
+                    <td>@employee.Salary</td>
+                    <td>@employee.IsActive</td>
+                    <td>@employee.IsDeleted</td>
+                    <td>@employee.HiringDate</td>
+                    <td>@employee.CreateAt</td>
+                    <td><a class="btn btn-success" asp-route-id="@employee.Id" asp-action="Details">Details</a></td>
+                    <td><a class="btn btn-warning" asp-route-id="@employee.Id" asp-action="Edit">Update</a></td>
+                    <td><a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#department@(employee.Id * 3)">Delete</a></td>
+
+                </tr>
+                    <!-- Modal -->
+                <div class="modal fade" id="department@(employee.Id * 3)" tabindex="-1" aria-labelledby="departmentLabel@(employee.Id * 3)" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content " width=106%;>
+                                <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="departmentLabel@(employee.Id * 3)">Warning</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                Are You Sure You Want To Delete <strong>@employee.Name</strong>?
+                                    <br />
+                                    You Can't Undo This Action
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <form>
+                                    <button type="submit" asp-route-id="@employee.Id" asp-action="Delete" class="delete btn btn-danger">Delete Employee</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            }
+        </tbody>
+    </table>
+}
+
+else
+{
+    <div class="mt-4 alert alert-warning">
+        <h4>
+            There Is No Employees :(
+        </h4>
+    </div>
+}

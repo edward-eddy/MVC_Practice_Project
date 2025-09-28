@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace MVC_Practice_Project.BLL.Repositories
 {
-    public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
+    // ASK CLR Create Object From AppDbContext
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
-        // ASK CLR Create Object From AppDbContext
-        public DepartmentRepository(AppDbContext context) : base(context)
+        public EmployeeRepository(AppDbContext context) : base(context)
         {
 
         }

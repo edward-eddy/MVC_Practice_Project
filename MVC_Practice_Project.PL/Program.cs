@@ -18,6 +18,7 @@ namespace MVC_Practice_Project.PL
             //builder.Services.AddSingleton();
 
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow DI For DepartmentRepository
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // Allow DI For DepartmentRepository
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
