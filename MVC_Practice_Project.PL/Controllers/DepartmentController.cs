@@ -28,7 +28,7 @@ namespace MVC_Practice_Project.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Department department)
+        public IActionResult Create(Employee department)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
@@ -78,7 +78,7 @@ namespace MVC_Practice_Project.PL.Controllers
             return Details(id, "Edit");
         }
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id, Department department)
+        public IActionResult Edit([FromRoute] int id, Employee department)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
