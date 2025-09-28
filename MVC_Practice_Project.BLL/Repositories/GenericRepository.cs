@@ -36,14 +36,14 @@ namespace MVC_Practice_Project.BLL.Repositories
 
         public int Delete(T model)
         {
-            _context.Set<T>().Add(model);
+            _context.Set<T>().Remove(model);
             return _context.SaveChanges();
         }
 
 
         public int Update(T model)
         {
-            _context.Set<T>().Add(model);
+            _context.Set<T>().Update(model);
             return _context.SaveChanges();
         }
     }

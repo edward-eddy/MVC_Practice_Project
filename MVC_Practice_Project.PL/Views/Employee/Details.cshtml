@@ -1,0 +1,51 @@
+﻿@model Employee
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Employee Details</h1>
+
+<br />
+<br />
+
+    <div class="my-3">
+        <label asp-for="Name" class="col-form-label fs-5"></label>
+        <input asp-for="Name" class="form-control" readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="Age" class="col-form-label fs-5"></label>
+        <input asp-for="Age" class="form-control"readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="Email" class="col-form-label fs-5"></label>
+        <input asp-for="Email" class="form-control" readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="Address" class="col-form-label fs-5"></label>
+        <input asp-for="Address" class="form-control" readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="Phone" class="col-form-label fs-5"></label>
+        <input asp-for="Phone" class="form-control" readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="Salary" class="col-form-label fs-5"></label>
+        <input asp-for="Salary" class="form-control" readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="IsActive" class="col-form-label fs-5">Is Active</label>
+    <input value="@Model.IsActive.ToString()" class="form-control" readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="IsDeleted" class="col-form-label fs-5">Is Deleted</label>
+        <input value="@Model.IsDeleted.ToString()" class="form-control" readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="HiringDate" class="col-form-label fs-5">Hiring Date</label>
+        <input asp-for="HiringDate" class="form-control" readonly />
+    </div>
+    <div>
+        <a asp-controller="Employee" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-controller="Employee" asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+
