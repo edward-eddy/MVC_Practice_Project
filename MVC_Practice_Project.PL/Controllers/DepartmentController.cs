@@ -52,14 +52,14 @@ namespace MVC_Practice_Project.PL.Controllers
             var department = _departmentRepository.Get(id.Value);
             if (department is null) return NotFound(new { statusCode = 404, ErrorMessage = $"Department with Id: {id} not Found" });
 
-            //var dto = new CreateDepartmentDto()
-            //{
-            //    Code = department.Code,
-            //    Name = department.Name,
-            //    CreateAt = department.CreateAt,
-            //};
+            var departmentDto = new CreateDepartmentDto()
+            {
+                Code = department.Code,
+                Name = department.Name,
+            };
 
-            return View(ViewName, department);
+            ViewBag.Id = id.Value;
+            return View(ViewName, departmentDto);
         }
         [HttpGet]
         public IActionResult Edit(int? id)

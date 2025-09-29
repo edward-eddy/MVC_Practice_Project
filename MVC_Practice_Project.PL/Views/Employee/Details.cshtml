@@ -1,6 +1,7 @@
-﻿@model Employee
+﻿@model CreateEmployeeDto
 @{
     ViewData["Title"] = "Details";
+    
 }
 
 <h1>Employee Details</h1>
@@ -45,7 +46,7 @@
         <input asp-for="HiringDate" class="form-control" readonly />
     </div>
     <div>
-        <a asp-controller="Employee" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-controller="Employee" asp-action="Edit" asp-route-id="@ViewBag.Id" class="btn btn-warning">Edit</a>
     <a asp-controller="Employee" asp-action="Index" class="btn btn-light">Back To List</a>
     </div>
 
