@@ -58,7 +58,21 @@ namespace MVC_Practice_Project.PL.Controllers
             var employee = _employeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { statusCode = 404, ErrorMessage = $"Employee with Id: {id} not Found" });
 
-            return View(ViewName, employee);
+            var employeeDto = new CreateEmployeeDto()
+            {
+                Name = employee.Name,
+                Age = employee.Age,
+                Email = employee.Email,
+                Address = employee.Address,
+                Phone = employee.Phone,
+                Salary = employee.Salary,
+                IsActive = employee.IsActive,
+                IsDeleted = employee.IsDeleted,
+                HiringDate = employee.HiringDate
+            };
+
+            ViewBag.Id = id.Value;
+            return View(ViewName, employeeDto);
         }
         [HttpGet]
         public IActionResult Edit(int? id)
