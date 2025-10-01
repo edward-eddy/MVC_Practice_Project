@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MVC_Practice_Project.BLL.Interfaces;
 using MVC_Practice_Project.BLL.Repositories;
 using MVC_Practice_Project.DAL.Data.Contexts;
+using MVC_Practice_Project.PL.Services;
 
 namespace MVC_Practice_Project.PL
 {
@@ -24,7 +25,16 @@ namespace MVC_Practice_Project.PL
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
                 //options.UseSqlServer(builder.Configuration["DefaultConnection"]);
-            }); // Allow DI For AppDbContext
+            }/*, ServiceLifetime.Singleton*/); // Allow DI For AppDbContext
+
+            //Life Time
+            //builder.Services.AddScoped();     // Create Object Life Time Per Request - Unreachable Object
+            //builder.Services.AddTransient();  // Create Object Life Time Per Operation
+            //builder.Services.AddSingleton();  // Create Object Life Time Per App
+
+            builder.Services.AddScoped<IScopedService, ScopedService>();
+            builder.Services.AddTransient<ITransientService, TransientService>();
+            builder.Services.AddSingleton<ISingletonService, SingletonService>();
 
             var app = builder.Build();
 
