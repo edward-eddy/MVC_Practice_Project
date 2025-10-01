@@ -7,7 +7,6 @@
 <h1>All Employees</h1>
 
 <br />
-<br />
 
 @* <div class="mx-3 alert alert-danger"> *@
     @* <p>@ViewData["Message01"]</p>
@@ -18,7 +17,6 @@
     @* <p>@ViewDataMessage</p> *@
 @* </div> *@
 
-@if (TempData["Popup"] is not null )
 @if (!string.IsNullOrEmpty(TempData["Popup"] as string) )
 {
     <div class="mx-3 alert alert-danger">
@@ -28,6 +26,13 @@
     </div>
 }
 
+<form class="mb-3 container">
+    <div class="row flex justify-content-between">
+        <input name="SearchInput" class="flex-column col-8 " id="SearchInput" asp-for="@ViewData["SearchInput"]" placeholder="Search By Name" />
+        <input type="submit" class="btn btn-success flex-column col-1" value="Search" />
+        <div class="col-2"></div>
+    </div>
+</form>
 
 <a asp-action="Create" asp-controller="Employee" class="btn btn-primary">Add New Employee</a>
 

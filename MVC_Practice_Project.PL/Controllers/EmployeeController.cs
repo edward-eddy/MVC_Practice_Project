@@ -17,9 +17,18 @@ namespace MVC_Practice_Project.PL.Controllers
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
         }
-        public IActionResult Index()
+        public IActionResult Index(string? SearchInput)
         {
-            var Employees = _employeeRepository.GetAll();
+            IEnumerable<Employee>? Employees;
+
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                Employees = _employeeRepository.GetAll();
+            }
+            else
+            {
+                Employees = _employeeRepository.GetByName(SearchInput);
+            }
             //// Dictionary   : 3 Property
             //// 1. ViewData  : Transfer Extra Information From Controller (Action) To View
             //ViewData["Message01"] = "Hello From ViewData";
@@ -29,6 +38,8 @@ namespace MVC_Practice_Project.PL.Controllers
 
 
             // 3. TempData  : Transfer Extra Information From Controller (Action) To View
+
+            ViewData["SearchInput"] = SearchInput;
             return View(Employees);
         }
 
