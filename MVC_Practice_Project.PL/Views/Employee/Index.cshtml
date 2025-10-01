@@ -1,12 +1,33 @@
 ﻿@model IEnumerable<Employee>
 @{
     ViewData["Title"] = "Index";
+    var ViewDataMessage = ViewData["Message02"];
 }
 
 <h1>All Employees</h1>
 
 <br />
 <br />
+
+@* <div class="mx-3 alert alert-danger"> *@
+    @* <p>@ViewData["Message01"]</p>
+    <p>@ViewData["Message02"]</p> *@
+    <br />
+    @* <p>@ViewBag.Message01</p>
+    <p>@ViewBag.Message02</p> *@
+    @* <p>@ViewDataMessage</p> *@
+@* </div> *@
+
+@if (TempData["Popup"] is not null )
+@if (!string.IsNullOrEmpty(TempData["Popup"] as string) )
+{
+    <div class="mx-3 alert alert-danger">
+        <p>
+            @TempData["Popup"]
+        </p>
+    </div>
+}
+
 
 <a asp-action="Create" asp-controller="Employee" class="btn btn-primary">Add New Employee</a>
 
@@ -24,10 +45,11 @@
                 <th>Address</th>
                 <th>Phone</th>
                 <th>Salary</th>
-                <th>Is Active</th>
-                <th>Is Deleted</th>
+                <th>Active</th>
+                <th>Deleted</th>
                 <th>Hiring Date</th>
                 <th>Created At</th>
+                <th>Department</th>
                 <th>Details</th>
                 <th>Update</th>
                 <th>Delete</th>
@@ -48,6 +70,7 @@
                     <td>@employee.IsDeleted</td>
                     <td>@employee.HiringDate</td>
                     <td>@employee.CreateAt</td>
+                    <td>@(employee.WorkFor?.Name ?? "Not Assigned")</td>
                     <td><a class="btn btn-success" asp-route-id="@employee.Id" asp-action="Details">Details</a></td>
                     <td><a class="btn btn-warning" asp-route-id="@employee.Id" asp-action="Edit">Update</a></td>
                     <td><a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#department@(employee.Id * 3)">Delete</a></td>

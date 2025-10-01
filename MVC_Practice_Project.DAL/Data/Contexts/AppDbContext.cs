@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MVC_Practice_Project.DAL.Data.Configurations;
 using MVC_Practice_Project.DAL.Models;
 using System;
 using System.Collections.Generic;

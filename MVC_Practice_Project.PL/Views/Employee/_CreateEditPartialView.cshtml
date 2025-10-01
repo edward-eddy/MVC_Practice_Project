@@ -1,4 +1,7 @@
 ﻿@model CreateEmployeeDto
+@{
+    var Departments = new SelectList(ViewBag.Departments /* as IEnumerable<Department> */, "Id", "Name");
+}
 
 <div class="my-3">
     <label asp-for="Name" class="col-form-label fs-5"></label>
@@ -44,4 +47,11 @@
     <label asp-for="HiringDate" class="col-form-label fs-5"></label>
     <input asp-for="HiringDate" class="form-control" />
     <span asp-validation-for="HiringDate" class="text-danger"></span>
+</div>
+<div class="my-3">
+    <label asp-for="WorkForId" class="col-form-label fs-5"></label>
+    <select asp-for="WorkForId" asp-items="Departments" class="form-select">
+        <option value="@null"> -- Select Department -- </option>
+    </select>
+    <span asp-validation-for="WorkForId" class="text-danger"></span>
 </div>

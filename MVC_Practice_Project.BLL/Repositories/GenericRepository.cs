@@ -1,4 +1,5 @@
-﻿using MVC_Practice_Project.BLL.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using MVC_Practice_Project.BLL.Interfaces;
 using MVC_Practice_Project.DAL.Data.Contexts;
 using MVC_Practice_Project.DAL.Models;
 using System;
@@ -20,11 +21,19 @@ namespace MVC_Practice_Project.BLL.Repositories
 
         public IEnumerable<T> GetAll()
         {
+            if (typeof(T) == typeof(Employee))
+            {
+                return (IEnumerable<T>)_context.Employees.Include(E => E.WorkFor).ToList();
+            }
             return _context.Set<T>().ToList();
         }
 
         public T? Get(int id)
         {
+            if (typeof(T) == typeof(Employee))
+            {
+                return _context.Employees.Include(E => E.WorkFor).FirstOrDefault(E => E.Id == id) as T;
+            }
             return _context.Set<T>().Find(id);
         }
 

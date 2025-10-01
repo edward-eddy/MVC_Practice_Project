@@ -6,24 +6,40 @@ using MVC_Practice_Project.PL.DTOs;
 
 namespace MVC_Practice_Project.PL.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IDepartmentRepository _departmentRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository)
         {
             _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
         }
         public IActionResult Index()
         {
             var Employees = _employeeRepository.GetAll();
+            //// Dictionary   : 3 Property
+            //// 1. ViewData  : Transfer Extra Information From Controller (Action) To View
+            //ViewData["Message01"] = "Hello From ViewData";
+
+            //// 2. ViewBag   : Transfer Extra Information From Controller (Action) To View
+            //ViewBag.Message02 = "Hello From ViewBag";
+
+
+            // 3. TempData  : Transfer Extra Information From Controller (Action) To View
             return View(Employees);
         }
+
         [HttpGet]
         public IActionResult Create()
         {
+            var departments = _departmentRepository.GetAll();
+            ViewBag.Departments = departments;
             return View();
         }
+
         [HttpPost]
         public IActionResult Create(CreateEmployeeDto model)
         {
@@ -39,17 +55,18 @@ namespace MVC_Practice_Project.PL.Controllers
                     Salary = model.Salary,
                     IsActive = model.IsActive,
                     IsDeleted = model.IsDeleted,
-                    HiringDate = model.HiringDate
+                    HiringDate = model.HiringDate,
+                    WorkForId = model.WorkForId
                 };
                 var Count = _employeeRepository.Add(employee);
                 if (Count > 0)
                 {
+                    TempData["Popup"] = "Employee Added Successfully";
                     return RedirectToAction(nameof(Index));
                 }
             }
             return View(model);
         }
-
 
         [HttpGet]
         public IActionResult Details([FromRoute] int? id, string ViewName = "Details")
@@ -68,18 +85,25 @@ namespace MVC_Practice_Project.PL.Controllers
                 Salary = employee.Salary,
                 IsActive = employee.IsActive,
                 IsDeleted = employee.IsDeleted,
-                HiringDate = employee.HiringDate
+                HiringDate = employee.HiringDate,
+                WorkForId = employee.WorkForId,
+                WorkFor = employee.WorkFor
             };
 
             ViewBag.Id = id.Value;
             return View(ViewName, employeeDto);
         }
+
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            var departments = _departmentRepository.GetAll();
+            ViewBag.Departments = departments;
             return Details(id, "Edit");
         }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute] int id, Employee employee)
         {
             if (ModelState.IsValid) // Server Side Validation
