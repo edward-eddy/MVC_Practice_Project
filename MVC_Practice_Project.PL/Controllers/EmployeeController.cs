@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MVC_Practice_Project.BLL.Interfaces;
 using MVC_Practice_Project.BLL.Repositories;
 using MVC_Practice_Project.DAL.Models;
@@ -10,12 +11,18 @@ namespace MVC_Practice_Project.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IDepartmentRepository _departmentRepository;
+        //private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository)
+        public EmployeeController(
+                                IEmployeeRepository employeeRepository,
+                                //IDepartmentRepository departmentRepository,
+                                IMapper mapper
+                                )
         {
             _employeeRepository = employeeRepository;
-            _departmentRepository = departmentRepository;
+            //_departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
         public IActionResult Index(string? SearchInput)
         {
@@ -46,8 +53,8 @@ namespace MVC_Practice_Project.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            var departments = _departmentRepository.GetAll();
-            ViewBag.Departments = departments;
+            //var departments = _departmentRepository.GetAll();
+            //ViewBag.Departments = departments;
             return View();
         }
 
@@ -56,19 +63,20 @@ namespace MVC_Practice_Project.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var employee = new Employee()
-                {
-                    Name = model.Name,
-                    Age = model.Age,
-                    Email = model.Email,
-                    Address = model.Address,
-                    Phone = model.Phone,
-                    Salary = model.Salary,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    HiringDate = model.HiringDate,
-                    WorkForId = model.WorkForId
-                };
+                //var employee = new Employee()
+                //{
+                //    Name = model.Name,
+                //    Age = model.Age,
+                //    Email = model.Email,
+                //    Address = model.Address,
+                //    Phone = model.Phone,
+                //    Salary = model.Salary,
+                //    IsActive = model.IsActive,
+                //    IsDeleted = model.IsDeleted,
+                //    HiringDate = model.HiringDate,
+                //    WorkForId = model.WorkForId
+                //};
+                var employee = _mapper.Map<Employee>(model);
                 var Count = _employeeRepository.Add(employee);
                 if (Count > 0)
                 {
@@ -86,21 +94,22 @@ namespace MVC_Practice_Project.PL.Controllers
             var employee = _employeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { statusCode = 404, ErrorMessage = $"Employee with Id: {id} not Found" });
 
-            var employeeDto = new CreateEmployeeDto()
-            {
-                Name = employee.Name,
-                Age = employee.Age,
-                Email = employee.Email,
-                Address = employee.Address,
-                Phone = employee.Phone,
-                Salary = employee.Salary,
-                IsActive = employee.IsActive,
-                IsDeleted = employee.IsDeleted,
-                HiringDate = employee.HiringDate,
-                WorkForId = employee.WorkForId,
-                WorkFor = employee.WorkFor
-            };
+            //var employeeDto = new CreateEmployeeDto()
+            //{
+            //    Name = employee.Name,
+            //    Age = employee.Age,
+            //    Email = employee.Email,
+            //    Address = employee.Address,
+            //    Phone = employee.Phone,
+            //    Salary = employee.Salary,
+            //    IsActive = employee.IsActive,
+            //    IsDeleted = employee.IsDeleted,
+            //    HiringDate = employee.HiringDate,
+            //    WorkForId = employee.WorkForId,
+            //    WorkFor = employee.WorkFor
+            //};
 
+            var employeeDto = _mapper.Map<CreateEmployeeDto>(employee);
             ViewBag.Id = id.Value;
             return View(ViewName, employeeDto);
         }
@@ -108,8 +117,8 @@ namespace MVC_Practice_Project.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            var departments = _departmentRepository.GetAll();
-            ViewBag.Departments = departments;
+            //var departments = _departmentRepository.GetAll();
+            //ViewBag.Departments = departments;
             return Details(id, "Edit");
         }
 
