@@ -19,6 +19,9 @@ namespace MVC_Practice_Project.DAL.Models
         public bool IsDeleted { get; set; }
         public DateTime HiringDate { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.Now;
+        public Department? WorkFor { get; set; }
+        public int? WorkForId { get; set; }
+
 
     }
 }

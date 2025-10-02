@@ -1,7 +1,6 @@
 ﻿@model CreateEmployeeDto
 @{
     ViewData["Title"] = "Details";
-    
 }
 
 <h1>Employee Details</h1>
@@ -44,6 +43,10 @@
     <div class="my-3">
         <label asp-for="HiringDate" class="col-form-label fs-5">Hiring Date</label>
         <input asp-for="HiringDate" class="form-control" readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="WorkFor.Name" class="col-form-label fs-5">Department</label>
+    <input asp-for="WorkFor.Name" value="@(Model.WorkFor?.Name ?? "Not Selected")" class="form-control" readonly />
     </div>
     <div>
     <a asp-controller="Employee" asp-action="Edit" asp-route-id="@ViewBag.Id" class="btn btn-warning">Edit</a>

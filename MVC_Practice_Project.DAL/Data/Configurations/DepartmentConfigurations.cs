@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace MVC_Practice_Project.DAL.Data.Configurations
 {
-    internal class DepartmentConfigurations : IEntityTypeConfiguration<Employee>
+    internal class DepartmentConfigurations : IEntityTypeConfiguration<Department>
     {
-        public void Configure(EntityTypeBuilder<Employee> builder)
+        public void Configure(EntityTypeBuilder<Department> builder)
         {
             builder.Property(D => D.Id).UseIdentityColumn(100, 100);
         }

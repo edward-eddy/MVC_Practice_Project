@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using MVC_Practice_Project.DAL.Models;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MVC_Practice_Project.PL.DTOs
@@ -7,7 +8,7 @@ namespace MVC_Practice_Project.PL.DTOs
     {
         [Required(ErrorMessage = "Name is Required !!")]
         public string Name { get; set; }
-        [Range(22, 60, ErrorMessage = "Age Must be Between 22 and 60")]
+        [Required, Range(22, 60, ErrorMessage = "Age Must be Between 22 and 60")]
         public int? Age { get; set; }
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
@@ -22,5 +23,9 @@ namespace MVC_Practice_Project.PL.DTOs
         public bool IsDeleted { get; set; }
         [DisplayName("Hiring Date")]
         public DateTime HiringDate { get; set; }
+        //public Department? WorkFor { get; set; }
+        [DisplayName("Department")]
+        public int? WorkForId { get; set; }
+        public Department? WorkFor { get; set; }
     }
 }
