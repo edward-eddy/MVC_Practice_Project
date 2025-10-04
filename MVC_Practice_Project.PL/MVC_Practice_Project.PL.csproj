@@ -19,4 +19,8 @@
     <ProjectReference Include="..\MVC_Practice_Project.BLL\MVC_Practice_Project.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\files\images\" />
+  </ItemGroup>
+
 </Project>

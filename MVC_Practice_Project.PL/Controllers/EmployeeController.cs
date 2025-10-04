@@ -17,15 +17,11 @@ namespace MVC_Practice_Project.PL.Controllers
         private readonly IMapper _mapper;
 
         public EmployeeController(
-                                //IEmployeeRepository employeeRepository,
-                                //IDepartmentRepository departmentRepository,
                                 IUnitOfWork unitOfWork,
                                 IMapper mapper
                                 )
         {
             _unitOfWork = unitOfWork;
-            //_employeeRepository = employeeRepository;
-            //_departmentRepository = departmentRepository;
             _mapper = mapper;
         }
         public IActionResult Index(string? SearchInput)
@@ -115,7 +111,7 @@ namespace MVC_Practice_Project.PL.Controllers
             var department = _unitOfWork.EmployeeRepository.Get(id.Value);
             if (department is null) return NotFound("Not Found!");
 
-            var Count = _unitOfWork.EmployeeRepository.Delete(department);
+            _unitOfWork.EmployeeRepository.Delete(department);
 
             return RedirectToAction(nameof(Index));
         }

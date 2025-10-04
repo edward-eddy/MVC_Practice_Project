@@ -21,7 +21,6 @@ namespace MVC_Practice_Project.DAL.Models
         public DateTime CreateAt { get; set; } = DateTime.Now;
         public Department? WorkFor { get; set; }
         public int? WorkForId { get; set; }
-
-
+        public string? ImageName { get; set; }
     }
 }
