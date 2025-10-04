@@ -4,6 +4,7 @@ using MVC_Practice_Project.BLL.Interfaces;
 using MVC_Practice_Project.BLL.Repositories;
 using MVC_Practice_Project.DAL.Models;
 using MVC_Practice_Project.PL.DTOs;
+using MVC_Practice_Project.PL.Helpers;
 
 namespace MVC_Practice_Project.PL.Controllers
 {
@@ -52,6 +53,11 @@ namespace MVC_Practice_Project.PL.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.Image is not null)
+                {
+                    model.ImageName = DocumentSettings.Uplode(model.Image, "images");
+                }
+
                 var employee = _mapper.Map<Employee>(model);
                 _unitOfWork.EmployeeRepository.Add(employee);
                 var Count = _unitOfWork.Complete();
@@ -60,6 +66,10 @@ namespace MVC_Practice_Project.PL.Controllers
                 {
                     TempData["Popup"] = "Employee Added Successfully";
                     return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    DocumentSettings.Delete(model.ImageName, "images");
                 }
             }
             return View(model);
