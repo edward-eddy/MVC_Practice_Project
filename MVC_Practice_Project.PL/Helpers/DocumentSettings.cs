@@ -4,7 +4,7 @@
     {
         // 1. Uplode
         // ImageName
-        public static string Uplode(IFormFile file, string folderName)
+        public static string Upload(IFormFile file, string folderName)
         {
             // 1. Get Folder Location
 

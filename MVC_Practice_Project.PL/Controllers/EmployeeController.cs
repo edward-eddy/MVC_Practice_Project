@@ -55,7 +55,7 @@ namespace MVC_Practice_Project.PL.Controllers
             {
                 if (model.Image is not null)
                 {
-                    model.ImageName = DocumentSettings.Uplode(model.Image, "images");
+                    model.ImageName = DocumentSettings.Upload(model.Image, "images");
                 }
 
                 var employee = _mapper.Map<Employee>(model);
@@ -98,11 +98,24 @@ namespace MVC_Practice_Project.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit([FromRoute] int id, CreateEmployeeDto model)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
+                if (model.ImageName is not null && model.Image is not null)
+                {
+                    DocumentSettings.Delete(model.ImageName, "images");
+                    model.ImageName = DocumentSettings.Upload(model.Image, "images");
+
+                }
+                else if (model.Image is not null)
+                {
+                    model.ImageName = DocumentSettings.Upload(model.Image, "images");
+                }
+
+                var employee = _mapper.Map<Employee>(model);
                 employee.Id = id;
+
                 _unitOfWork.EmployeeRepository.Update(employee);
                 var Count = _unitOfWork.Complete();
 
@@ -110,8 +123,15 @@ namespace MVC_Practice_Project.PL.Controllers
                 {
                     return RedirectToAction(nameof(Index));
                 }
+                else
+                {
+                    if (model.Image is not null)
+                    {
+                        DocumentSettings.Delete(model.ImageName, "images");
+                    }
+                }
             }
-            return View(employee);
+            return View(model);
         }
 
         [HttpGet]
@@ -122,8 +142,14 @@ namespace MVC_Practice_Project.PL.Controllers
             if (department is null) return NotFound("Not Found!");
 
             _unitOfWork.EmployeeRepository.Delete(department);
+            int count = _unitOfWork.Complete();
+
+            if (count > 0 && department.ImageName is not null)
+                DocumentSettings.Delete(department.ImageName, "images");
+
 
             return RedirectToAction(nameof(Index));
         }
     }
+}
 }
