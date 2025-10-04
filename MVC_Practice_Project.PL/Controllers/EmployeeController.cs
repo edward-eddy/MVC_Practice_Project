@@ -10,17 +10,21 @@ namespace MVC_Practice_Project.PL.Controllers
     [AutoValidateAntiforgeryToken]
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        //private readonly IEmployeeRepository _employeeRepository;
         //private readonly IDepartmentRepository _departmentRepository;
         private readonly IMapper _mapper;
 
         public EmployeeController(
-                                IEmployeeRepository employeeRepository,
+                                //IEmployeeRepository employeeRepository,
                                 //IDepartmentRepository departmentRepository,
+                                IUnitOfWork unitOfWork,
                                 IMapper mapper
                                 )
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
+            //_employeeRepository = employeeRepository;
             //_departmentRepository = departmentRepository;
             _mapper = mapper;
         }
@@ -30,21 +34,12 @@ namespace MVC_Practice_Project.PL.Controllers
 
             if (string.IsNullOrEmpty(SearchInput))
             {
-                Employees = _employeeRepository.GetAll();
+                Employees = _unitOfWork.EmployeeRepository.GetAll();
             }
             else
             {
-                Employees = _employeeRepository.GetByName(SearchInput);
+                Employees = _unitOfWork.EmployeeRepository.GetByName(SearchInput);
             }
-            //// Dictionary   : 3 Property
-            //// 1. ViewData  : Transfer Extra Information From Controller (Action) To View
-            //ViewData["Message01"] = "Hello From ViewData";
-
-            //// 2. ViewBag   : Transfer Extra Information From Controller (Action) To View
-            //ViewBag.Message02 = "Hello From ViewBag";
-
-
-            // 3. TempData  : Transfer Extra Information From Controller (Action) To View
 
             ViewData["SearchInput"] = SearchInput;
             return View(Employees);
@@ -53,8 +48,6 @@ namespace MVC_Practice_Project.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            //var departments = _departmentRepository.GetAll();
-            //ViewBag.Departments = departments;
             return View();
         }
 
@@ -63,21 +56,10 @@ namespace MVC_Practice_Project.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var employee = new Employee()
-                //{
-                //    Name = model.Name,
-                //    Age = model.Age,
-                //    Email = model.Email,
-                //    Address = model.Address,
-                //    Phone = model.Phone,
-                //    Salary = model.Salary,
-                //    IsActive = model.IsActive,
-                //    IsDeleted = model.IsDeleted,
-                //    HiringDate = model.HiringDate,
-                //    WorkForId = model.WorkForId
-                //};
                 var employee = _mapper.Map<Employee>(model);
-                var Count = _employeeRepository.Add(employee);
+                _unitOfWork.EmployeeRepository.Add(employee);
+                var Count = _unitOfWork.Complete();
+
                 if (Count > 0)
                 {
                     TempData["Popup"] = "Employee Added Successfully";
@@ -91,23 +73,9 @@ namespace MVC_Practice_Project.PL.Controllers
         public IActionResult Details([FromRoute] int? id, string ViewName = "Details")
         {
             if (id is null) return BadRequest("Invalid Id");
-            var employee = _employeeRepository.Get(id.Value);
+            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { statusCode = 404, ErrorMessage = $"Employee with Id: {id} not Found" });
 
-            //var employeeDto = new CreateEmployeeDto()
-            //{
-            //    Name = employee.Name,
-            //    Age = employee.Age,
-            //    Email = employee.Email,
-            //    Address = employee.Address,
-            //    Phone = employee.Phone,
-            //    Salary = employee.Salary,
-            //    IsActive = employee.IsActive,
-            //    IsDeleted = employee.IsDeleted,
-            //    HiringDate = employee.HiringDate,
-            //    WorkForId = employee.WorkForId,
-            //    WorkFor = employee.WorkFor
-            //};
 
             var employeeDto = _mapper.Map<CreateEmployeeDto>(employee);
             ViewBag.Id = id.Value;
@@ -129,7 +97,9 @@ namespace MVC_Practice_Project.PL.Controllers
             if (ModelState.IsValid) // Server Side Validation
             {
                 employee.Id = id;
-                var Count = _employeeRepository.Update(employee);
+                _unitOfWork.EmployeeRepository.Update(employee);
+                var Count = _unitOfWork.Complete();
+
                 if (Count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -142,10 +112,10 @@ namespace MVC_Practice_Project.PL.Controllers
         public IActionResult Delete(int? id)
         {
             if (id is null) return BadRequest("Invalid Id");
-            var department = _employeeRepository.Get(id.Value);
+            var department = _unitOfWork.EmployeeRepository.Get(id.Value);
             if (department is null) return NotFound("Not Found!");
 
-            var Count = _employeeRepository.Delete(department);
+            var Count = _unitOfWork.EmployeeRepository.Delete(department);
 
             return RedirectToAction(nameof(Index));
         }

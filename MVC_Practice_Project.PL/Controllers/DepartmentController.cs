@@ -9,16 +9,18 @@ namespace MVC_Practice_Project.PL.Controllers
     public class DepartmentController : Controller
     {
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         // ASK CLR To Create Object From DepartmentRepository
-        public DepartmentController(IDepartmentRepository departmentRepository)
+        public DepartmentController(/*IDepartmentRepository departmentRepository*/IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departmentRepository;
+            //_departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            var departments = _departmentRepository.GetAll();
+            var departments = _unitOfWork.DepartmentRepository.GetAll();
 
             return View(departments);
         }
@@ -37,7 +39,8 @@ namespace MVC_Practice_Project.PL.Controllers
                     Code = model.Code,
                     Name = model.Name,
                 };
-                var Count = _departmentRepository.Add(department);
+                _unitOfWork.DepartmentRepository.Add(department);
+                var Count = _unitOfWork.Complete();
                 if (Count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -49,7 +52,7 @@ namespace MVC_Practice_Project.PL.Controllers
         public IActionResult Details([FromRoute] int? id, string ViewName = "Details")
         {
             if (id is null) return BadRequest("Invalid Id");
-            var department = _departmentRepository.Get(id.Value);
+            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
             if (department is null) return NotFound(new { statusCode = 404, ErrorMessage = $"Department with Id: {id} not Found" });
 
             var departmentDto = new CreateDepartmentDto()
@@ -89,7 +92,8 @@ namespace MVC_Practice_Project.PL.Controllers
                 //    Id = id
                 //};
                 department.Id = id;
-                var Count = _departmentRepository.Update(department);
+                _unitOfWork.DepartmentRepository.Update(department);
+                var Count = _unitOfWork.Complete();
                 if (Count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -102,16 +106,12 @@ namespace MVC_Practice_Project.PL.Controllers
         public IActionResult Delete(int? id)
         {
             if (id is null) return BadRequest("Invalid Id");
-            var department = _departmentRepository.Get(id.Value);
+            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
             if (department is null) return NotFound("Not Found!");
 
-            var Count = _departmentRepository.Delete(department);
-            //if (Count > 0)
-            //{
-            return RedirectToAction(nameof(Index));
-            //}
+            _unitOfWork.DepartmentRepository.Delete(department);
 
-            //return View("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -21,9 +21,9 @@ namespace MVC_Practice_Project.PL
             //builder.Services.AddTransient();
             //builder.Services.AddSingleton();
 
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow DI For DepartmentRepository
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // Allow DI For DepartmentRepository
-            //builder.Services.AddScoped<IMapper, Mapper>();
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow DI For DepartmentRepository
+            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // Allow DI For DepartmentRepository
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Allow DI For DepartmentRepository
             builder.Services.AddAutoMapper(cfg => { cfg.AddProfile(new EmployeeProfile()); });
 
             builder.Services.AddDbContext<AppDbContext>(options =>
