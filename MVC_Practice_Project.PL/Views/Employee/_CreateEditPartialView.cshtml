@@ -2,7 +2,7 @@
 @inject IUnitOfWork unitOfWork
 @{
     // var Departments = new SelectList(ViewBag.Departments /* as IEnumerable<Department> */, "Id", "Name");
-    var Departments = new SelectList(unitOfWork.DepartmentRepository.GetAll(), "Id", "Name");
+    var Departments = new SelectList(await unitOfWork.DepartmentRepository.GetAllAsync(), "Id", "Name");
 }
 
 <div class="my-3">

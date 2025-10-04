@@ -21,9 +21,9 @@ namespace MVC_Practice_Project.BLL.Repositories
             EmployeeRepository = new EmployeeRepository(_context);
         }
 
-        public int Complete()
+        public async Task<int> CompleteAsync()
         {
-            return _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
     }
 }

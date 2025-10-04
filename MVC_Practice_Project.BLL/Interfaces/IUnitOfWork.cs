@@ -10,6 +10,6 @@ namespace MVC_Practice_Project.BLL.Interfaces
     {
         IDepartmentRepository DepartmentRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
-        int Complete();
+        Task<int> CompleteAsync();
     }
 }

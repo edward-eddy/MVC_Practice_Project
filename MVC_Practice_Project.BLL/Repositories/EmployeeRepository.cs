@@ -20,9 +20,9 @@ namespace MVC_Practice_Project.BLL.Repositories
             _context = context;
         }
 
-        public List<Employee>? GetByName(string Name)
+        public async Task<List<Employee>?> GetByNameAsync(string Name)
         {
-            return _context.Employees.Include(E => E.WorkFor).Where(E => E.Name.ToLower().Contains(Name.ToLower())).ToList();
+            return await _context.Employees.Include(E => E.WorkFor).Where(E => E.Name.ToLower().Contains(Name.ToLower())).ToListAsync();
         }
     }
 }

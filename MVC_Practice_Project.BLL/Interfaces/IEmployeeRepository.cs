@@ -9,6 +9,6 @@ namespace MVC_Practice_Project.BLL.Interfaces
 {
     public interface IEmployeeRepository : IGenericRepository<Employee>
     {
-        List<Employee>? GetByName(string Name);
+        Task<List<Employee>>? GetByNameAsync(string Name);
     }
 }
