@@ -1,8 +1,8 @@
 ﻿@model CreateEmployeeDto
-@inject IDepartmentRepository _departmentRepo
+@inject IUnitOfWork unitOfWork
 @{
     // var Departments = new SelectList(ViewBag.Departments /* as IEnumerable<Department> */, "Id", "Name");
-    var Departments = new SelectList(_departmentRepo.GetAll(), "Id", "Name");
+    var Departments = new SelectList(await unitOfWork.DepartmentRepository.GetAllAsync(), "Id", "Name");
 }
 
 <div class="my-3">
@@ -57,3 +57,9 @@
     </select>
     <span asp-validation-for="WorkForId" class="text-danger"></span>
 </div>
+<div class="my-3">
+    <label asp-for="Image" class="col-form-label fs-5"></label>
+    <input asp-for="Image" class="form-control" />
+</div>
+    <input asp-for="ImageName" class="form-control" hidden />
+

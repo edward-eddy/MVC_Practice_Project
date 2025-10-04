@@ -3,22 +3,25 @@ using MVC_Practice_Project.BLL.Interfaces;
 using MVC_Practice_Project.BLL.Repositories;
 using MVC_Practice_Project.DAL.Models;
 using MVC_Practice_Project.PL.DTOs;
+using System.Threading.Tasks;
 
 namespace MVC_Practice_Project.PL.Controllers
 {
     public class DepartmentController : Controller
     {
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         // ASK CLR To Create Object From DepartmentRepository
-        public DepartmentController(IDepartmentRepository departmentRepository)
+        public DepartmentController(/*IDepartmentRepository departmentRepository*/IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departmentRepository;
+            //_departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var departments = _departmentRepository.GetAll();
+            var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
 
             return View(departments);
         }
@@ -28,7 +31,7 @@ namespace MVC_Practice_Project.PL.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(CreateDepartmentDto model)
+        public async Task<IActionResult> Create(CreateDepartmentDto model)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
@@ -37,7 +40,8 @@ namespace MVC_Practice_Project.PL.Controllers
                     Code = model.Code,
                     Name = model.Name,
                 };
-                var Count = _departmentRepository.Add(department);
+                await _unitOfWork.DepartmentRepository.AddAsync(department);
+                var Count = await _unitOfWork.CompleteAsync();
                 if (Count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -46,10 +50,10 @@ namespace MVC_Practice_Project.PL.Controllers
             return View(model);
         }
         [HttpGet]
-        public IActionResult Details([FromRoute] int? id, string ViewName = "Details")
+        public async Task<IActionResult> Details([FromRoute] int? id, string ViewName = "Details")
         {
             if (id is null) return BadRequest("Invalid Id");
-            var department = _departmentRepository.Get(id.Value);
+            var department = await _unitOfWork.DepartmentRepository.GetAsync(id.Value);
             if (department is null) return NotFound(new { statusCode = 404, ErrorMessage = $"Department with Id: {id} not Found" });
 
             var departmentDto = new CreateDepartmentDto()
@@ -62,7 +66,7 @@ namespace MVC_Practice_Project.PL.Controllers
             return View(ViewName, departmentDto);
         }
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             //if (id is null) return BadRequest("Invalid Id");
             //var department = _departmentRepository.Get(id.Value);
@@ -74,10 +78,10 @@ namespace MVC_Practice_Project.PL.Controllers
             //    Name = department.Name,
             //    CreateAt = department.CreateAt,
             //};
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
         }
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id, Department department)
+        public async Task<IActionResult> Edit([FromRoute] int id, Department department)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
@@ -89,7 +93,8 @@ namespace MVC_Practice_Project.PL.Controllers
                 //    Id = id
                 //};
                 department.Id = id;
-                var Count = _departmentRepository.Update(department);
+                _unitOfWork.DepartmentRepository.Update(department);
+                var Count = await _unitOfWork.CompleteAsync();
                 if (Count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -99,19 +104,16 @@ namespace MVC_Practice_Project.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id is null) return BadRequest("Invalid Id");
-            var department = _departmentRepository.Get(id.Value);
+            var department = await _unitOfWork.DepartmentRepository.GetAsync(id.Value);
             if (department is null) return NotFound("Not Found!");
 
-            var Count = _departmentRepository.Delete(department);
-            //if (Count > 0)
-            //{
-            return RedirectToAction(nameof(Index));
-            //}
+            _unitOfWork.DepartmentRepository.Delete(department);
+            await _unitOfWork.CompleteAsync();
 
-            //return View("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

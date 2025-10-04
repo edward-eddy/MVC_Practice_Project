@@ -4,47 +4,35 @@ using MVC_Practice_Project.BLL.Interfaces;
 using MVC_Practice_Project.BLL.Repositories;
 using MVC_Practice_Project.DAL.Models;
 using MVC_Practice_Project.PL.DTOs;
+using MVC_Practice_Project.PL.Helpers;
+using System.Threading.Tasks;
 
 namespace MVC_Practice_Project.PL.Controllers
 {
     [AutoValidateAntiforgeryToken]
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        //private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
         private readonly IMapper _mapper;
 
-        public EmployeeController(
-                                IEmployeeRepository employeeRepository,
-                                //IDepartmentRepository departmentRepository,
-                                IMapper mapper
-                                )
+        public EmployeeController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _employeeRepository = employeeRepository;
-            //_departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public IActionResult Index(string? SearchInput)
+        public async Task<IActionResult> Index(string? SearchInput)
         {
             IEnumerable<Employee>? Employees;
 
             if (string.IsNullOrEmpty(SearchInput))
             {
-                Employees = _employeeRepository.GetAll();
+                Employees = await _unitOfWork.EmployeeRepository.GetAllAsync();
             }
             else
             {
-                Employees = _employeeRepository.GetByName(SearchInput);
+                Employees = await _unitOfWork.EmployeeRepository.GetByNameAsync(SearchInput);
             }
-            //// Dictionary   : 3 Property
-            //// 1. ViewData  : Transfer Extra Information From Controller (Action) To View
-            //ViewData["Message01"] = "Hello From ViewData";
-
-            //// 2. ViewBag   : Transfer Extra Information From Controller (Action) To View
-            //ViewBag.Message02 = "Hello From ViewBag";
-
-
-            // 3. TempData  : Transfer Extra Information From Controller (Action) To View
 
             ViewData["SearchInput"] = SearchInput;
             return View(Employees);
@@ -53,61 +41,43 @@ namespace MVC_Practice_Project.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            //var departments = _departmentRepository.GetAll();
-            //ViewBag.Departments = departments;
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(CreateEmployeeDto model)
+        public async Task<IActionResult> Create(CreateEmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                //var employee = new Employee()
-                //{
-                //    Name = model.Name,
-                //    Age = model.Age,
-                //    Email = model.Email,
-                //    Address = model.Address,
-                //    Phone = model.Phone,
-                //    Salary = model.Salary,
-                //    IsActive = model.IsActive,
-                //    IsDeleted = model.IsDeleted,
-                //    HiringDate = model.HiringDate,
-                //    WorkForId = model.WorkForId
-                //};
+                if (model.Image is not null)
+                {
+                    model.ImageName = DocumentSettings.Upload(model.Image, "images");
+                }
+
                 var employee = _mapper.Map<Employee>(model);
-                var Count = _employeeRepository.Add(employee);
+                await _unitOfWork.EmployeeRepository.AddAsync(employee);
+                var Count = await _unitOfWork.CompleteAsync();
+
                 if (Count > 0)
                 {
                     TempData["Popup"] = "Employee Added Successfully";
                     return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    DocumentSettings.Delete(model.ImageName, "images");
                 }
             }
             return View(model);
         }
 
         [HttpGet]
-        public IActionResult Details([FromRoute] int? id, string ViewName = "Details")
+        public async Task<IActionResult> Details([FromRoute] int? id, string ViewName = "Details")
         {
             if (id is null) return BadRequest("Invalid Id");
-            var employee = _employeeRepository.Get(id.Value);
+            var employee = await _unitOfWork.EmployeeRepository.GetAsync(id.Value);
             if (employee is null) return NotFound(new { statusCode = 404, ErrorMessage = $"Employee with Id: {id} not Found" });
 
-            //var employeeDto = new CreateEmployeeDto()
-            //{
-            //    Name = employee.Name,
-            //    Age = employee.Age,
-            //    Email = employee.Email,
-            //    Address = employee.Address,
-            //    Phone = employee.Phone,
-            //    Salary = employee.Salary,
-            //    IsActive = employee.IsActive,
-            //    IsDeleted = employee.IsDeleted,
-            //    HiringDate = employee.HiringDate,
-            //    WorkForId = employee.WorkForId,
-            //    WorkFor = employee.WorkFor
-            //};
 
             var employeeDto = _mapper.Map<CreateEmployeeDto>(employee);
             ViewBag.Id = id.Value;
@@ -115,39 +85,65 @@ namespace MVC_Practice_Project.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            //var departments = _departmentRepository.GetAll();
-            //ViewBag.Departments = departments;
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public async Task<IActionResult> Edit([FromRoute] int id, CreateEmployeeDto model)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
+                if (model.ImageName is not null && model.Image is not null)
+                {
+                    DocumentSettings.Delete(model.ImageName, "images");
+                    model.ImageName = DocumentSettings.Upload(model.Image, "images");
+
+                }
+                else if (model.Image is not null)
+                {
+                    model.ImageName = DocumentSettings.Upload(model.Image, "images");
+                }
+
+                var employee = _mapper.Map<Employee>(model);
                 employee.Id = id;
-                var Count = _employeeRepository.Update(employee);
+
+                _unitOfWork.EmployeeRepository.Update(employee);
+                var Count = await _unitOfWork.CompleteAsync();
+
                 if (Count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
+                else
+                {
+                    if (model.Image is not null)
+                    {
+                        DocumentSettings.Delete(model.ImageName, "images");
+                    }
+                }
             }
-            return View(employee);
+            return View(model);
         }
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id is null) return BadRequest("Invalid Id");
-            var department = _employeeRepository.Get(id.Value);
-            if (department is null) return NotFound("Not Found!");
+            var Employee = await _unitOfWork.EmployeeRepository.GetAsync(id.Value);
+            if (Employee is null) return NotFound("Not Found!");
 
-            var Count = _employeeRepository.Delete(department);
+            _unitOfWork.EmployeeRepository.Delete(Employee);
+            int count = await _unitOfWork.CompleteAsync();
+
+            if (count > 0 && Employee.ImageName is not null)
+                DocumentSettings.Delete(Employee.ImageName, "images");
+
 
             return RedirectToAction(nameof(Index));
         }
     }
 }
+

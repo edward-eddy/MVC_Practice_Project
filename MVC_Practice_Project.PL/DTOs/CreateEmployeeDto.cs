@@ -27,5 +27,7 @@ namespace MVC_Practice_Project.PL.DTOs
         [DisplayName("Department")]
         public int? WorkForId { get; set; }
         public Department? WorkFor { get; set; }
+        public string? ImageName { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }
