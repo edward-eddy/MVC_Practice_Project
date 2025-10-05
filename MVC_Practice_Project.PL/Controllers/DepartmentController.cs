@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MVC_Practice_Project.BLL.Interfaces;
 using MVC_Practice_Project.BLL.Repositories;
 using MVC_Practice_Project.DAL.Models;
@@ -7,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace MVC_Practice_Project.PL.Controllers
 {
+    [Authorize]
     public class DepartmentController : Controller
     {
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         // ASK CLR To Create Object From DepartmentRepository
-        public DepartmentController(/*IDepartmentRepository departmentRepository*/IUnitOfWork unitOfWork)
+        public DepartmentController(IUnitOfWork unitOfWork)
         {
-            //_departmentRepository = departmentRepository;
             _unitOfWork = unitOfWork;
         }
 
