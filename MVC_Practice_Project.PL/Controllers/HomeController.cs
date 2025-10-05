@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC_Practice_Project.PL.Models;
 using MVC_Practice_Project.PL.Services;
@@ -6,6 +7,7 @@ using System.Text;
 
 namespace MVC_Practice_Project.PL.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -17,36 +19,36 @@ namespace MVC_Practice_Project.PL.Controllers
         private readonly ISingletonService singletonService02;
 
         public HomeController(
-                            ILogger<HomeController> logger,
-                            IScopedService scopedService01,
-                            IScopedService scopedService02,
-                            ITransientService transientService01,
-                            ITransientService transientService02,
-                            ISingletonService singletonService01,
-                            ISingletonService singletonService02
+                            ILogger<HomeController> logger
+                            //IScopedService scopedService01,
+                            //IScopedService scopedService02,
+                            //ITransientService transientService01,
+                            //ITransientService transientService02,
+                            //ISingletonService singletonService01,
+                            //ISingletonService singletonService02
                             )
         {
             _logger = logger;
-            this.scopedService01 = scopedService01;
-            this.scopedService02 = scopedService02;
-            this.transientService01 = transientService01;
-            this.transientService02 = transientService02;
-            this.singletonService01 = singletonService01;
-            this.singletonService02 = singletonService02;
+            //this.scopedService01 = scopedService01;
+            //this.scopedService02 = scopedService02;
+            //this.transientService01 = transientService01;
+            //this.transientService02 = transientService02;
+            //this.singletonService01 = singletonService01;
+            //this.singletonService02 = singletonService02;
         }
 
-        public string TestLifeTime()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append($"scopedService01: {scopedService01.GetGuid()}\n");
-            stringBuilder.Append($"scopedService01: {scopedService02.GetGuid()}\n\n");
-            stringBuilder.Append($"transientService01: {transientService01.GetGuid()}\n");
-            stringBuilder.Append($"transientService02: {transientService02.GetGuid()}\n\n");
-            stringBuilder.Append($"singletonService01: {singletonService01.GetGuid()} \n");
-            stringBuilder.Append($"singletonService02: {singletonService02.GetGuid()} \n\n");
+        //public string TestLifeTime()
+        //{
+        //    StringBuilder stringBuilder = new StringBuilder();
+        //    stringBuilder.Append($"scopedService01: {scopedService01.GetGuid()}\n");
+        //    stringBuilder.Append($"scopedService01: {scopedService02.GetGuid()}\n\n");
+        //    stringBuilder.Append($"transientService01: {transientService01.GetGuid()}\n");
+        //    stringBuilder.Append($"transientService02: {transientService02.GetGuid()}\n\n");
+        //    stringBuilder.Append($"singletonService01: {singletonService01.GetGuid()} \n");
+        //    stringBuilder.Append($"singletonService02: {singletonService02.GetGuid()} \n\n");
 
-            return stringBuilder.ToString();
-        }
+        //    return stringBuilder.ToString();
+        //}
         public IActionResult Index()
         {
             return View();

@@ -20,15 +20,10 @@ namespace MVC_Practice_Project.PL
             // Add services to the container.
             builder.Services.AddControllersWithViews(); // Register Built-in MVC Services
 
-            //builder.Services.AddTransient();
-            //builder.Services.AddSingleton();
 
-            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow DI For DepartmentRepository
-            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // Allow DI For DepartmentRepository
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Allow DI For DepartmentRepository
             builder.Services.AddAutoMapper(cfg => { cfg.AddProfile(new EmployeeProfile()); });
 
-            builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
@@ -36,15 +31,17 @@ namespace MVC_Practice_Project.PL
                 //options.UseSqlServer(builder.Configuration["DefaultConnection"]);
             }/*, ServiceLifetime.Singleton*/); // Allow DI For AppDbContext
 
-            //Life Time
-            //builder.Services.AddScoped();     // Create Object Life Time Per Request - Unreachable Object
-            //builder.Services.AddTransient();  // Create Object Life Time Per Operation
-            //builder.Services.AddSingleton();  // Create Object Life Time Per App
 
-            builder.Services.AddScoped<IScopedService, ScopedService>();
-            builder.Services.AddTransient<ITransientService, TransientService>();
-            builder.Services.AddSingleton<ISingletonService, SingletonService>();
+            //builder.Services.AddScoped<IScopedService, ScopedService>();
+            //builder.Services.AddTransient<ITransientService, TransientService>();
+            //builder.Services.AddSingleton<ISingletonService, SingletonService>();
 
+            builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SignIn";
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -59,6 +56,9 @@ namespace MVC_Practice_Project.PL
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             //app.UseAuthorization();
 

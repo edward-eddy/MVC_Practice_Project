@@ -9,10 +9,12 @@ namespace MVC_Practice_Project.PL.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public AccountController(UserManager<AppUser> userManager)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
 
@@ -84,8 +86,12 @@ namespace MVC_Practice_Project.PL.Controllers
                     if (flag)
                     {
                         // Sign In
+                        var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.IsRemembered, false);
 
-                        return RedirectToAction(nameof(HomeController.Index), "Home");
+                        if (result.Succeeded)
+                        {
+                            return RedirectToAction(nameof(HomeController.Index), "Home");
+                        }
                     }
                 }
                 ModelState.AddModelError("", "Invalid SignUp");
@@ -96,7 +102,11 @@ namespace MVC_Practice_Project.PL.Controllers
         #endregion
 
         #region SignOut
-
+        public async Task<IActionResult> SignOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(SignIn), "Account");
+        }
         #endregion
 
 
