@@ -1,9 +1,11 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MVC_Practice_Project.BLL.Interfaces;
 using MVC_Practice_Project.BLL.Repositories;
 using MVC_Practice_Project.DAL.Data.Contexts;
+using MVC_Practice_Project.DAL.Models;
 using MVC_Practice_Project.PL.Mapping;
 using MVC_Practice_Project.PL.Services;
 
@@ -25,6 +27,8 @@ namespace MVC_Practice_Project.PL
             //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // Allow DI For DepartmentRepository
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Allow DI For DepartmentRepository
             builder.Services.AddAutoMapper(cfg => { cfg.AddProfile(new EmployeeProfile()); });
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
