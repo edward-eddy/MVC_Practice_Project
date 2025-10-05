@@ -1,20 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MVC_Practice_Project.DAL.Data.Configurations;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MVC_Practice_Project.DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MVC_Practice_Project.DAL.Data.Contexts
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,6 +16,8 @@ namespace MVC_Practice_Project.DAL.Data.Contexts
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(modelBuilder);
+
+            //modelBuilder.Entity<IdentityUser>().ToTable("");
         }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
