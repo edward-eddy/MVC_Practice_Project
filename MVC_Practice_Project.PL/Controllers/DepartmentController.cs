@@ -13,9 +13,8 @@ namespace MVC_Practice_Project.PL.Controllers
         private readonly IUnitOfWork _unitOfWork;
 
         // ASK CLR To Create Object From DepartmentRepository
-        public DepartmentController(/*IDepartmentRepository departmentRepository*/IUnitOfWork unitOfWork)
+        public DepartmentController(IUnitOfWork unitOfWork)
         {
-            //_departmentRepository = departmentRepository;
             _unitOfWork = unitOfWork;
         }
 
