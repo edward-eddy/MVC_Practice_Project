@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MVC_Practice_Project.DAL.Models;
 using MVC_Practice_Project.PL.DTOs;
+using MVC_Practice_Project.PL.Helpers;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MVC_Practice_Project.PL.Controllers
@@ -109,7 +111,46 @@ namespace MVC_Practice_Project.PL.Controllers
         }
         #endregion
 
+        [HttpGet]
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> SendResetPasswordURL(ForgetPasswordDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+                    // Generate Token
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    // Create URL
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+
+                    // Create Email
+                    var email = new Email()
+                    {
+                        To = model.Email,
+                        Subject = "Reset PAssword",
+                        Body = url
+                    };
+
+                    // Send Email
+                    var flag = EmailSettings.SendEmail(email);
+                    if (flag)
+                    {
+                        return RedirectToAction("EmailSent");
+                    }
+                }
+            }
+            ModelState.AddModelError("", "Invalid Reset Operation");
+            return View("ForgetPassword", model);
+        }
 
     }
 }
