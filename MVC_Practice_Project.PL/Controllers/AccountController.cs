@@ -144,7 +144,7 @@ namespace MVC_Practice_Project.PL.Controllers
                     var flag = EmailSettings.SendEmail(email);
                     if (flag)
                     {
-                        return RedirectToAction("EmailSent");
+                        return RedirectToAction("CheckYourInbox");
                     }
                 }
             }
@@ -152,5 +152,10 @@ namespace MVC_Practice_Project.PL.Controllers
             return View("ForgetPassword", model);
         }
 
+        [HttpGet]
+        public IActionResult CheckYourInbox()
+        {
+            return View();
+        }
     }
 }
