@@ -33,7 +33,17 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Employee</a>
                         </li>
                     </ul>
+                    @* <ul class="navbar-nav flex-grow-1"> *@
+                        @* <p class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                        </p>
+                        <p class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Role">Roles</a>
+                        </p> *@
+                    @* </ul> *@
                 </div>
+                <a asp-action="Index" asp-controller="User" class="btn btn-light">Users</a>
+                <a asp-action="Roles" asp-controller="User" class="btn btn-light mx-4">Roles</a>
                 <a asp-action="SignOut" asp-controller="Account" class="btn btn-danger">Sign Out</a>
             </div>
         </nav>

@@ -1,0 +1,36 @@
+﻿@model UsersIndexTableDto
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Employee Details</h1>
+
+<br />
+<br />
+
+    <div class="my-3">
+        <label asp-for="Username" class="col-form-label fs-5"></label>
+        <input asp-for="Username" class="form-control" readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="FirstName" class="col-form-label fs-5"></label>
+        <input asp-for="FirstName" class="form-control"readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="LastName" class="col-form-label fs-5"></label>
+        <input asp-for="LastName" class="form-control" readonly />
+    </div>
+    <div class="my-3">
+        <label asp-for="Email" class="col-form-label fs-5"></label>
+        <input asp-for="Email" class="form-control" readonly />
+    </div>
+    
+    @* <div class="my-3">
+        <label asp-for="WorkFor.Name" class="col-form-label fs-5">Department</label>
+    <input asp-for="WorkFor.Name" value="@(Model.WorkFor?.Name ?? "Not Selected")" class="form-control" readonly />
+    </div> *@
+    <div>
+    <a asp-controller="User" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-controller="User" asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+

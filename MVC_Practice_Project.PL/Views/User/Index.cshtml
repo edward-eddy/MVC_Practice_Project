@@ -1,0 +1,127 @@
+﻿@model IEnumerable<UsersIndexTableDto>
+@{
+    ViewData["Title"] = "Index";
+    var ViewDataMessage = ViewData["Message02"];
+}
+
+<h1>All Users</h1>
+
+<br />
+
+
+@if (!string.IsNullOrEmpty(TempData["Popup"] as string))
+{
+    <div class="mx-3 alert alert-danger">
+        <p>
+            @TempData["Popup"]
+        </p>
+    </div>
+}
+
+<form method="get" class="mb-3 container">
+    <div class="row flex justify-content-between">
+        <input name="SearchInput" class="flex-column col-8 " id="SearchInput" asp-for="@ViewData["SearchInput"]" placeholder="Search By Name" />
+        <input type="submit" class="btn btn-success flex-column col-1" value="Search" />
+        <div class="col-2"></div>
+    </div>
+</form>
+
+
+<br />
+<br />
+
+@if (Model.Any())
+{
+    <div id="UsersContainer">
+        <table class="table table-hover table-striped table-light">
+            <thead>
+                <tr class="text-center">
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>Details</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.Username</td>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.Email</td>
+                        <td>
+                            @foreach (var role in user.Roles)
+                            {
+                                <span class="badge text-bg-primary">@role</span>
+                            }
+                        </td>
+                        <td><a class="btn btn-success" asp-route-id="@user.Id" asp-action="Details">Details</a></td>
+                        <td><a class="btn btn-warning" asp-route-id="@user.Id" asp-action="Edit">Update</a></td>
+                        <td><a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user-@user.Id">Delete</a></td>
+
+                    </tr>
+                    <!-- Modal -->
+                    <div class="modal fade" id="user-@user.Id" tabindex="-1" aria-labelledby="Label-user-@(user.Id)" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="Label-user-@(user.Id)">Warning</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are You Sure You Want To Delete <strong>@user.Username</strong>?
+                                    <br />
+                                    You Can't Undo This Action
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <form>
+                                        <button type="submit" asp-route-id="@user.Id" asp-action="Delete" class="delete btn btn-danger">Delete Employee</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+else
+{
+    <div id="UsersContainer">
+        <div class="mt-4 alert alert-warning">
+            <h4>
+                There Is No Users :(
+            </h4>
+        </div>
+    </div>
+
+}
+<script>
+    let timer;
+
+    document.getElementById("SearchInput").addEventListener("keyup", (e) => {
+        clearTimeout(timer); // إلغاء أي timeout سابق
+        timer = setTimeout(() => {
+            const url = `https://localhost:44302/User?SearchInput=${e.target.value}`;
+            fetch(url)
+                .then(r => r.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, "text/html");
+                    const tablePart = doc.getElementById("UsersContainer").innerHTML;
+                    document.getElementById("UsersContainer").innerHTML = tablePart;
+                });
+        }, 1000);
+    });
+</script>
