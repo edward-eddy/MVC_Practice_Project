@@ -1,0 +1,24 @@
+﻿@model RoleDto
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit @Model.Name Data</h1>
+
+<form asp-action="Edit">
+
+    <div class="my-3">
+        <label asp-for="Name" class="col-form-label fs-5"></label>
+        <input asp-for="Name" class="form-control"/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    
+    
+    <div class="m-3">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a asp-controller="User" asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+</form>
+@section ValidationSection {
+    <partial name="_ValidationScriptsPartial" />
+}

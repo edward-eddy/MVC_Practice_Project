@@ -28,7 +28,7 @@
 
 <form method="get" class="mb-3 container">
     <div class="row flex justify-content-between">
-        <input name="SearchInput" class="flex-column col-8 " id="SearchInput" asp-for="@ViewData["SearchInput"]" placeholder="Search By Name" />
+        <input name="SearchInput" class="flex-column col-8 " route="Employee" id="SearchInput" asp-for="@ViewData["SearchInput"]" placeholder="Search By Name" />
         <input type="submit" class="btn btn-success flex-column col-1" value="Search" />
         <div class="col-2"></div>
     </div>
@@ -41,7 +41,7 @@
 
 @if (Model.Any())
 {
-    <div id="EmployeesContainer">
+    <div id="TableContainer">
         <table class="table table-hover table-striped table-light">
             <thead>
                 <tr>
@@ -114,7 +114,7 @@
 
 else
 {
-    <div id="EmployeesContainer">
+    <div id="TableContainer">
         <div class="mt-4 alert alert-warning">
             <h4>
                 There Is No Employees :(
@@ -124,21 +124,4 @@ else
 
 }
 
-<script>
-    let timer;
-
-    document.getElementById("SearchInput").addEventListener("keyup", (e) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            const url = `https://localhost:44302/Employee?SearchInput=${e.target.value}`;
-            fetch(url)
-                .then(r => r.text())
-                .then(html => {
-                    let parser = new DOMParser();
-                let doc = parser.parseFromString(html, "text/html");
-                let tablePart = doc.getElementById("EmployeesContainer").innerHTML;
-                document.getElementById("EmployeesContainer").innerHTML = tablePart;
-                });
-        }, 1000);
-    });
-</script>
+<script src="~/js/SearchByName.js"></script> 

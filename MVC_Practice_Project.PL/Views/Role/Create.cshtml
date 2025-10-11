@@ -1,0 +1,25 @@
+﻿@model CreateRoleDto
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<h1>Create New Role</h1>
+
+<form asp-action="Create">
+
+    <div class="my-3">
+        <label asp-for="Name" class="col-form-label fs-5"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+
+    <div class="m-3">
+        <input type="submit" value="Create" class="btn btn-success" />
+        <a asp-controller="Role" asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+</form>
+@section ValidationSection {
+    <partial name="_ValidationScriptsPartial" />
+}
