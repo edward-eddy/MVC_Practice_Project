@@ -1,0 +1,22 @@
+﻿@model CreateRoleDto
+@{
+    ViewData["Title"] = "Edit";
+    var RoleId = ViewBag.RoleId;
+}
+
+<h1>Edit @Model.Name Data</h1>
+
+<form asp-action="Edit">
+
+    <partial name="_CreateOrEditForm"></partial>
+    
+    
+    <div class="my-3">
+        <a asp-controller="Role" asp-action="AddOrRemoveUsers" asp-route-roleId="@RoleId" class="btn btn-success">Add Or Remove Users</a>
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a asp-controller="Role" asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+</form>
+@section ValidationSection {
+    <partial name="_ValidationScriptsPartial" />
+}

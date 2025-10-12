@@ -36,7 +36,9 @@ namespace MVC_Practice_Project.PL
             //builder.Services.AddTransient<ITransientService, TransientService>();
             //builder.Services.AddSingleton<ISingletonService, SingletonService>();
 
-            builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                            .AddEntityFrameworkStores<AppDbContext>()
+                            .AddDefaultTokenProviders();
 
             builder.Services.ConfigureApplicationCookie(config =>
             {

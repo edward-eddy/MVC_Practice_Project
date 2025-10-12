@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC_Practice_Project.BLL.Interfaces;
-using MVC_Practice_Project.BLL.Repositories;
 using MVC_Practice_Project.DAL.Models;
 using MVC_Practice_Project.PL.DTOs;
 using MVC_Practice_Project.PL.Helpers;
-using System.Threading.Tasks;
 
 namespace MVC_Practice_Project.PL.Controllers
 {
@@ -23,6 +21,7 @@ namespace MVC_Practice_Project.PL.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        [HttpGet]
         public async Task<IActionResult> Index(string? SearchInput)
         {
             IEnumerable<Employee>? Employees;

@@ -1,0 +1,21 @@
+﻿@model CreateRoleDto
+@{
+    ViewData["Title"] = "Details";
+    var RoleId = ViewBag.RoleId;
+}
+
+<h1>Role Details</h1>
+
+<br />
+<br />
+
+    <div class="my-3">
+        <label asp-for="Name" class="col-form-label fs-5"></label>
+        <input asp-for="Name" class="form-control" readonly />
+    </div>
+    
+    <div>
+    <a asp-controller="Role" asp-action="Edit" asp-route-id="RoleId" class="btn btn-warning">Edit</a>
+    <a asp-controller="Role" asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+

@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
+
 <div>
     <div class="text-center mb-8">
         <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
@@ -36,7 +37,7 @@
                 <span class="ml-2 text-sm text-gray-600">Remember me</span>
             </label>
 
-            <a href="#" data-container="forgot-password-form-container" id="forgot-password-link" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+            <a asp-action="ForgetPassword" data-container="forgot-password-form-container" id="forgot-password-link" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
                 Forgot password?
             </a>
         </div>
