@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MVC_Practice_Project.DAL.Models;
 using MVC_Practice_Project.PL.DTOs;
 using MVC_Practice_Project.PL.Helpers;
@@ -10,10 +11,12 @@ namespace MVC_Practice_Project.PL.Controllers
     public class RoleController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public RoleController(RoleManager<IdentityRole> roleManager)
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -75,11 +78,11 @@ namespace MVC_Practice_Project.PL.Controllers
             var role = await _roleManager.FindByIdAsync(id);
             if (role is null) return NotFound(new { statusCode = 404, ErrorMessage = $"Role with Id: {id} not Found" });
 
-            var RoleDto = new RoleDto()
+            var RoleDto = new CreateRoleDto()
             {
-                Id = role.Id,
                 Name = role.Name
             };
+            ViewBag.RoleId = id;
 
             return View(ViewName, RoleDto);
         }
@@ -92,14 +95,14 @@ namespace MVC_Practice_Project.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute] string id, RoleDto model)
+        public async Task<IActionResult> Edit([FromRoute] string id, CreateRoleDto model)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
                 var role = await _roleManager.FindByIdAsync(id);
                 if (role is null) return BadRequest(error: "Invalid Operations !");
 
-                role.Id = model.Id;
+                role.Id = id;
                 role.Name = model.Name;
 
                 var result = await _roleManager.UpdateAsync(role);
@@ -129,6 +132,55 @@ namespace MVC_Practice_Project.PL.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public async Task<IActionResult> AddOrRemoveUsers(string roleId)
+        {
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role is null) return NotFound();
+            var AllUsersInRole = new List<UserInRoleDto>();
+            var users = await _userManager.Users.ToListAsync();
+
+            foreach (var user in users)
+            {
+                var userInRole = new UserInRoleDto()
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    IsSelected = await _userManager.IsInRoleAsync(user, role.Name)
+                };
+
+                AllUsersInRole.Add(userInRole);
+            }
+            ViewData["RoleName"] = role.Name;
+            ViewData["RoleId"] = role.Id;
+            return View(AllUsersInRole);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddOrRemoveUsers(string roleId, List<UserInRoleDto> roleUsers)
+        {
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role is null) return NotFound();
+            if (ModelState.IsValid)
+            {
+                foreach (var user in roleUsers)
+                {
+                    var appUser = await _userManager.FindByIdAsync(user.UserId);
+                    if (appUser is not null)
+                    {
+                        if (user.IsSelected && !await _userManager.IsInRoleAsync(appUser, role.Name))
+                        {
+                            await _userManager.AddToRoleAsync(appUser, role.Name);
+                        }
+                        else if (!user.IsSelected && await _userManager.IsInRoleAsync(appUser, role.Name))
+                        {
+                            await _userManager.RemoveFromRoleAsync(appUser, role.Name);
+                        }
+                    }
+                }
+                return RedirectToAction(nameof(Edit), new { id = role.Id });
+            }
+            return View(roleUsers);
         }
     }
 }

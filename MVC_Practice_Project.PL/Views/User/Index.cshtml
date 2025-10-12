@@ -60,7 +60,7 @@
                         <td>
                             @foreach (var role in user.Roles)
                             {
-                                <span class="badge text-bg-primary">@role</span>
+                                <span class="badge bg-warning">@role</span>
                             }
                         </td>
                         <td><a class="btn btn-success" asp-route-id="@user.Id" asp-action="Details">Details</a></td>

@@ -1,0 +1,27 @@
+﻿@model List<UserInRoleDto>
+@{
+    ViewData["Title"] = "AddOrRemoveUsers";
+    var RoleId = @ViewData["RoleId"] as string;
+}
+
+<h3>@ViewData["RoleName"] Role</h3>
+
+
+<form asp-action="AddOrRemoveUsers" asp-route-roleId="@RoleId">
+    @for(int i = 0; i < Model.Count; i++)
+    {
+        <div style="align-items: center; display: flex; gap: 10px;">
+            <input asp-for="@Model[i].IsSelected" class="form-check-input" />
+            <label asp-for="@Model[i].IsSelected" class="col-form-label fs-5">@Model[i].UserName</label>
+            @* <span asp-validation-for="@Model[i].IsSelected" class="text-danger"></span> *@
+        </div>
+        <input asp-for="@Model[i].UserId" type="hidden" />
+        <input asp-for="@Model[i].UserName" type="hidden" />
+
+    }
+    <div class="mt-2" style="gap: 5px;">
+        <button type="submit" class="btn btn-light">Update</button>
+        <a asp-action="Edit" asp-route-id="@RoleId" class="btn btn-close" title="Cancel"></a>
+    </div>
+</form>
+

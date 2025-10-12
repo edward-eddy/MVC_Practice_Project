@@ -1,6 +1,7 @@
-﻿@model RoleDto
+﻿@model CreateRoleDto
 @{
     ViewData["Title"] = "Details";
+    var RoleId = ViewBag.RoleId;
 }
 
 <h1>Role Details</h1>
@@ -14,7 +15,7 @@
     </div>
     
     <div>
-    <a asp-controller="Role" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-controller="Role" asp-action="Edit" asp-route-id="RoleId" class="btn btn-warning">Edit</a>
     <a asp-controller="Role" asp-action="Index" class="btn btn-light">Back To List</a>
     </div>
 
