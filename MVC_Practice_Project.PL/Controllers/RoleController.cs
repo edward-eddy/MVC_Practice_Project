@@ -154,6 +154,7 @@ namespace MVC_Practice_Project.PL.Controllers
             }
             ViewData["RoleName"] = role.Name;
             ViewData["RoleId"] = role.Id;
+            //return PartialView("AddOrRemoveUser", AllUsersInRole);
             return View(AllUsersInRole);
         }
         [HttpPost]
